@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --matrix:  #00FF41;
+  --cyber:   #00D4FF;
+  --neon:    #FF00FF;
+}
+
+/* Scrollbar cyberpunk */
+::-webkit-scrollbar        { width: 4px; }
+::-webkit-scrollbar-track  { background: #050508; }
+::-webkit-scrollbar-thumb  { background: #00FF41; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #00D4FF; }
+
+/* Selección de texto */
+::selection { background: rgba(0,255,65,0.3); color: #fff; }
+
+/* Grid de fondo sutil */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Línea de escaneo animada */
+.scan-line {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,255,65,0.4), transparent);
+  animation: scan 8s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Glow en texto */
+.text-glow-matrix { text-shadow: 0 0 10px #00FF41, 0 0 20px rgba(0,255,65,0.5); }
+.text-glow-cyber  { text-shadow: 0 0 10px #00D4FF, 0 0 20px rgba(0,212,255,0.5); }
+
+/* Card glassmorphism cyberpunk */
+.card-cyber {
+  background: rgba(0,255,65,0.03);
+  border: 1px solid rgba(0,255,65,0.15);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+.card-cyber:hover {
+  border-color: rgba(0,255,65,0.4);
+  box-shadow: 0 0 20px rgba(0,255,65,0.1), inset 0 0 20px rgba(0,255,65,0.03);
+}
+
+@keyframes scan {
+  0%   { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes glow {
+  0%   { text-shadow: 0 0 4px #00FF41; }
+  100% { text-shadow: 0 0 20px #00FF41, 0 0 40px #00FF41; }
+}
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.4; }
+}
+@keyframes pulse-border {
+  0%, 100% { border-color: rgba(0,255,65,0.2); }
+  50%       { border-color: rgba(0,255,65,0.6); }
+}

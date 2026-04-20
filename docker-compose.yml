@@ -1,0 +1,60 @@
+# ═══════════════════════════════════════════════════════════════
+#  docker-compose.yml — Blender MCP SaaS
+#  Uso desarrollo:   docker compose up
+#  Uso producción:   docker compose -f docker-compose.yml up -d
+# ═══════════════════════════════════════════════════════════════
+
+version: '3.9'
+
+services:
+
+  # ── Backend NestJS ────────────────────────────────────────
+  api:
+    build:
+      context: ./server-api
+      dockerfile: Dockerfile
+      target: runner
+    container_name: blender-mcp-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-3001}:3001"
+    environment:
+      NODE_ENV:           production
+      PORT:               3001
+      SUPABASE_URL:       ${SUPABASE_URL}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
+      INTERNAL_API_KEY:   ${INTERNAL_API_KEY}
+      FRONTEND_URL:       ${FRONTEND_URL:-http://localhost:3000}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    # Solo los archivos necesarios para ejecutar (no src/)
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+
+  # ── Frontend Next.js (opcional en local) ─────────────────
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: blender-mcp-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:3001}
+    depends_on:
+      api:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  default:
+    driver: bridge

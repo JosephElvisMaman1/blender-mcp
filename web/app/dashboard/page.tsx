@@ -1,7 +1,10 @@
-import Link from 'next/link';
+'use client';
 
-const GITHUB_USER = 'YOUR_USERNAME';
-const RELEASE_BASE = `https://github.com/${GITHUB_USER}/blender-mcp/releases/download/v1.0.0`;
+import Link from 'next/link';
+import { useI18n } from '@/lib/i18n/context';
+
+const GITHUB_USER = 'JoSeph_MM';
+const RELEASE_BASE = `https://github.com/JosephElvisMaman1/blender-mcp/releases/download/v1.0.0`;
 
 const DOWNLOADS = [
   {
@@ -30,14 +33,16 @@ const DOWNLOADS = [
   },
 ];
 
-const SETUP_STEPS = [
-  { step: '1', title: 'Instala el addon', body: 'Blender → Edit → Preferences → Add-ons → Install → selecciona addon/__init__.py → activa "MCP Bridge"' },
-  { step: '2', title: 'Inicia el servidor en Blender', body: 'View3D → Sidebar → MCP → Iniciar Servidor (puerto 9876)' },
-  { step: '3', title: 'Ejecuta el binario', body: 'Abre una terminal y corre el binario descargado. Introduce tu license key cuando se solicite.' },
-  { step: '4', title: 'Conecta tu cliente MCP', body: 'Agrega el servidor a Claude Desktop, Cursor o Windsurf. El servidor se detecta automáticamente.' },
-];
-
 export default function DashboardPage() {
+  const { t } = useI18n();
+
+  const SETUP_STEPS = [
+    { step: '1', title: t.dashboard.setupSteps[0].title, body: t.dashboard.setupSteps[0].body },
+    { step: '2', title: t.dashboard.setupSteps[1].title, body: t.dashboard.setupSteps[1].body },
+    { step: '3', title: t.dashboard.setupSteps[2].title, body: t.dashboard.setupSteps[2].body },
+    { step: '4', title: t.dashboard.setupSteps[3].title, body: t.dashboard.setupSteps[3].body },
+  ];
+
   return (
     <div className="min-h-screen bg-bg">
 
@@ -57,16 +62,16 @@ export default function DashboardPage() {
 
         {/* Welcome */}
         <section>
-          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">// Dashboard</p>
+          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">{t.dashboard.eyebrow}</p>
           <h1 className="font-display font-bold text-4xl text-text-1 tracking-tight mb-2">
-            Bienvenido a BlenderMCP
+            {t.dashboard.h1}
           </h1>
-          <p className="text-text-2">Descarga el binario para tu sistema y sigue los pasos de configuración.</p>
+          <p className="text-text-2">{t.dashboard.subtitle}</p>
         </section>
 
         {/* Downloads */}
         <section>
-          <h2 className="font-display font-semibold text-xl text-text-1 mb-5">Descargar binario</h2>
+          <h2 className="font-display font-semibold text-xl text-text-1 mb-5">{t.dashboard.downloadTitle}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {DOWNLOADS.map((d) => (
               <a
@@ -91,31 +96,33 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          <div className="mt-4 p-4 rounded-xl bg-surface border border-border">
-            <p className="text-xs text-text-3 font-mono">
-              <span className="text-flame">nota:</span> El addon de Blender (
-              <span className="text-sky">addon/__init__.py</span>) está disponible en el repositorio GitHub.
-              Es necesario instalarlo en Blender antes de iniciar el servidor.
-            </p>
+          <div className="mt-4 p-5 rounded-xl border border-amber-500/40 bg-amber-500/5 flex items-start gap-4">
+            <span className="text-amber-400 text-xl flex-shrink-0 mt-0.5">⚠</span>
+            <div>
+              <p className="font-semibold text-amber-300 mb-1 text-sm">
+                {t.dashboard.addonCalloutTitle}
+              </p>
+              <p className="text-xs text-text-3 leading-relaxed">
+                {t.dashboard.addonCalloutBody}
+              </p>
+            </div>
           </div>
         </section>
 
         {/* License activation */}
         <section>
-          <h2 className="font-display font-semibold text-xl text-text-1 mb-2">Activar licencia</h2>
+          <h2 className="font-display font-semibold text-xl text-text-1 mb-2">{t.dashboard.licenseTitle}</h2>
           <p className="text-text-2 text-sm mb-6">
-            Al ejecutar el binario por primera vez, se te pedirá tu license key de Gumroad.
-            La activación vincula el binario a tu hardware — no necesitas hacer nada aquí.
+            {t.dashboard.licenseSubtitle}
           </p>
 
           <div className="card rounded-2xl p-6 border-flame/20 bg-flame/5">
             <div className="flex items-start gap-4">
               <span className="text-flame text-lg mt-0.5">⚡</span>
               <div>
-                <p className="font-semibold text-text-1 mb-1">Activación automática en primer arranque</p>
+                <p className="font-semibold text-text-1 mb-1">{t.dashboard.licenseCardTitle}</p>
                 <p className="text-sm text-text-2 leading-relaxed">
-                  El binario detecta tu hardware ID (SHA-256 del MAC address) y lo vincula a tu license key.
-                  Si cambias de equipo, contacta soporte para transferir la licencia.
+                  {t.dashboard.licenseCardBody}
                 </p>
               </div>
             </div>
@@ -124,7 +131,7 @@ export default function DashboardPage() {
 
         {/* Setup steps */}
         <section>
-          <h2 className="font-display font-semibold text-xl text-text-1 mb-6">Configuración</h2>
+          <h2 className="font-display font-semibold text-xl text-text-1 mb-6">{t.dashboard.setupTitle}</h2>
           <div className="space-y-0">
             {SETUP_STEPS.map((s, i) => (
               <div key={s.step} className="flex gap-6 relative">
@@ -144,21 +151,25 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Community */}
-        <section className="card rounded-2xl p-8 text-center">
-          <p className="font-display font-bold text-2xl text-text-1 mb-2">Versión Community</p>
-          <p className="text-text-2 text-sm mb-6 max-w-sm mx-auto">
-            Clona el repositorio y ejecuta <span className="font-mono text-sky text-xs bg-surface px-1.5 py-0.5 rounded">python src/server.py</span> directamente.
-            Sin binario, sin licencia.
-          </p>
-          <a
-            href={`https://github.com/${GITHUB_USER}/blender-mcp`}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-secondary inline-block px-6 py-3 rounded-xl text-sm font-medium border border-border"
-          >
-            Ver en GitHub
-          </a>
+        {/* Research Disclosure */}
+        <section className="card rounded-2xl p-8 border border-violet/20 bg-violet/5">
+          <div className="flex items-start gap-4">
+            <span className="text-violet text-xl mt-0.5 flex-shrink-0">🔬</span>
+            <div>
+              <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-2">
+                {t.dashboard.disclosureEyebrow}
+              </p>
+              <h2 className="font-display font-bold text-xl text-text-1 mb-3">
+                {t.dashboard.disclosureH2}
+              </h2>
+              <p className="text-text-2 text-sm leading-relaxed mb-3">
+                {t.dashboard.disclosureBody}
+              </p>
+              <p className="text-text-3 text-xs leading-relaxed">
+                {t.dashboard.disclosureByok}
+              </p>
+            </div>
+          </div>
         </section>
 
       </main>
@@ -167,7 +178,7 @@ export default function DashboardPage() {
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <span className="text-text-3 text-xs font-mono">© 2025 BlenderMCP</span>
           <Link href="/" className="text-xs text-text-3 hover:text-flame transition-colors">
-            ← Volver al inicio
+            {t.dashboard.backHome}
           </Link>
         </div>
       </footer>

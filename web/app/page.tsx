@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n/context';
 
 // ── Constants ─────────────────────────────────────────────────
 const GITHUB_URL = 'https://github.com/YOUR_USERNAME/blender-mcp';
@@ -28,9 +31,9 @@ const FEATURES = [
     size: 'small',
   },
   {
-    tag: 'Privacidad',
-    title: 'BYOK — Tu clave, tus datos',
-    desc: 'La API key nunca toca nuestros servidores.',
+    tag: 'BYOK',
+    title: 'Tu clave, tus datos',
+    desc: 'Bring Your Own Key. Tu API key nunca toca nuestros servidores. Privacidad soberana garantizada por arquitectura.',
     accent: 'sky',
     size: 'small',
   },
@@ -50,19 +53,18 @@ const FEATURES = [
   },
 ];
 
-const STEPS = [
-  { n: '01', title: 'Instala el addon', desc: 'Preferences → Add-ons → Install → activa MCP Bridge' },
-  { n: '02', title: 'Inicia el servidor', desc: 'View3D → Sidebar → MCP → Iniciar Servidor (puerto 9876)' },
-  { n: '03', title: 'Conecta tu IA', desc: 'Añade el servidor MCP a Claude Desktop o Cursor. Empieza a crear.' },
-];
-
 const PLANS = [
   {
-    name: 'Community',
+    name: 'Academic',
     price: 'Free',
-    period: 'para siempre',
-    features: ['Código fuente completo', 'Sin validación de licencia', '13 herramientas MCP', 'Soporte via Issues'],
-    cta: { label: 'Ver en GitHub', href: GITHUB_URL, external: true, primary: false },
+    period: 'Licencia de uso académico',
+    features: [
+      '3 herramientas MCP esenciales',
+      'Infraestructura de ecosistema',
+      'Código fuente abierto',
+      'Soporte via Issues',
+    ],
+    cta: { label: 'Explorar en GitHub', href: GITHUB_URL, external: true, primary: false },
     featured: false,
   },
   {
@@ -70,7 +72,13 @@ const PLANS = [
     price: '$29',
     period: 'pago único',
     badge: 'Más popular',
-    features: ['Binario precompilado (Win/Mac/Linux)', 'GPT Vision Bridge incluido', 'Actualizaciones de por vida', 'Soporte prioritario'],
+    features: [
+      '13 herramientas MCP Premium',
+      'GPT Vision Bridge incluido',
+      'Binario precompilado (Win/Mac/Linux)',
+      'Actualizaciones de por vida',
+      'Soporte prioritario',
+    ],
     cta: { label: 'Comprar Pro', href: GUMROAD_PRO, external: true, primary: true },
     featured: true,
   },
@@ -78,7 +86,12 @@ const PLANS = [
     name: 'Lifetime',
     price: '$79',
     period: 'acceso vitalicio',
-    features: ['Todo lo de Pro', '3 activaciones de hardware', 'Acceso a versiones beta', 'Discord privado'],
+    features: [
+      'Todo lo de Pro',
+      '3 activaciones de hardware',
+      'Acceso a versiones beta',
+      'Discord privado',
+    ],
     cta: { label: 'Comprar Lifetime', href: GUMROAD_LIFETIME, external: true, primary: false },
     featured: false,
   },
@@ -105,6 +118,7 @@ blender_render_image(samples=128, output_path="/tmp/scene.png")`;
 
 // ── Nav ────────────────────────────────────────────────────────
 function Nav() {
+  const { t, locale, setLocale } = useI18n();
   return (
     <nav className="fixed top-0 inset-x-0 z-50 border-b border-border/60 bg-bg/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -119,11 +133,11 @@ function Nav() {
 
         <div className="hidden md:flex items-center gap-8">
           {[
-            { label: 'Características', href: '#features' },
-            { label: 'Cómo funciona', href: '#how' },
-            { label: 'Precios', href: '#pricing' },
+            { label: t.nav.features, href: '#features' },
+            { label: t.nav.howItWorks, href: '#how' },
+            { label: t.nav.pricing, href: '#pricing' },
           ].map((l) => (
-            <a key={l.label} href={l.href}
+            <a key={l.href} href={l.href}
               className="text-sm text-text-2 hover:text-text-1 transition-colors font-medium">
               {l.label}
             </a>
@@ -131,13 +145,20 @@ function Nav() {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setLocale(locale === 'en' ? 'es' : 'en')}
+            className="text-xs font-mono text-text-3 border border-border px-2.5 py-1.5 rounded-md hover:text-flame hover:border-flame/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flame/50"
+            aria-label="Toggle language"
+          >
+            {locale === 'en' ? 'ES' : 'EN'}
+          </button>
           <Link href="/dashboard"
             className="btn-secondary text-sm px-4 py-2 rounded-lg hidden sm:block">
-            Dashboard
+            {t.nav.dashboard}
           </Link>
           <a href={GUMROAD_PRO} target="_blank" rel="noreferrer"
             className="btn-primary text-sm px-4 py-2 rounded-lg">
-            Comprar Pro →
+            {t.nav.buyPro}
           </a>
         </div>
       </div>
@@ -147,6 +168,7 @@ function Nav() {
 
 // ── Hero ───────────────────────────────────────────────────────
 function Hero() {
+  const { t } = useI18n();
   return (
     <section className="relative bg-hero bg-grid noise pt-32 pb-24 overflow-hidden">
       <div className="relative z-10 max-w-6xl mx-auto px-6">
@@ -166,18 +188,17 @@ function Hero() {
             </h1>
 
             <p className="text-text-2 text-lg sm:text-xl leading-relaxed max-w-md mb-10">
-              Claude, GPT y Cursor controlan tu escena en tiempo real.
-              El servidor MCP más completo para automatización 3D.
+              {t.hero.subtitle}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-10">
               <a href={GUMROAD_PRO} target="_blank" rel="noreferrer"
                 className="btn-primary px-6 py-3.5 rounded-xl text-sm font-semibold text-center">
-                Comprar Pro — $29 →
+                {t.hero.ctaPrimary}
               </a>
               <a href={GITHUB_URL} target="_blank" rel="noreferrer"
                 className="btn-secondary px-6 py-3.5 rounded-xl text-sm font-medium text-center">
-                Ver en GitHub (Community)
+                {t.hero.ctaSecondary}
               </a>
             </div>
 
@@ -230,6 +251,7 @@ function CompatBar() {
 
 // ── Features ───────────────────────────────────────────────────
 function Features() {
+  const { t } = useI18n();
   const accentMap: Record<string, string> = {
     flame:  'text-flame border-flame/20 bg-flame/5',
     sky:    'text-sky border-sky/20 bg-sky/5',
@@ -241,11 +263,11 @@ function Features() {
     <section id="features" className="py-24 px-6 bg-surface-glow">
       <div className="max-w-6xl mx-auto">
         <div className="mb-14">
-          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">// Capacidades</p>
+          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">{t.features.eyebrow}</p>
           <h2 className="font-display font-bold text-4xl sm:text-5xl text-text-1 tracking-tight">
-            Engineered for <span className="text-flame">3D artists</span>
+            <span className="text-flame">{t.features.h2Line1}</span>
             <br />
-            <span className="text-text-2">and AI engineers</span>
+            <span className="text-text-2">{t.features.h2Line2}</span>
           </h2>
         </div>
 
@@ -287,13 +309,16 @@ function Features() {
 
 // ── How it works ───────────────────────────────────────────────
 function HowItWorks() {
+  const { t } = useI18n();
+  const STEPS = t.how.steps;
+
   return (
     <section id="how" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-14">
-          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">// Setup</p>
+          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">{t.how.eyebrow}</p>
           <h2 className="font-display font-bold text-4xl sm:text-5xl text-text-1 tracking-tight">
-            Funcionando en <span className="text-flame">3 pasos</span>
+            {t.how.h2} <span className="text-flame">{t.how.h2Accent}</span>
           </h2>
         </div>
 
@@ -321,15 +346,16 @@ function HowItWorks() {
 
 // ── Pricing ────────────────────────────────────────────────────
 function Pricing() {
+  const { t } = useI18n();
   return (
     <section id="pricing" className="py-24 px-6 bg-surface/50">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
-          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">// Licencias</p>
+          <p className="text-xs font-mono text-text-3 uppercase tracking-widest mb-3">{t.pricing.eyebrow}</p>
           <h2 className="font-display font-bold text-4xl sm:text-5xl text-text-1 tracking-tight mb-3">
-            Elige tu plan
+            {t.pricing.h2}
           </h2>
-          <p className="text-text-2 text-sm font-mono">Pago único · Sin suscripciones · Sin sorpresas</p>
+          <p className="text-text-2 text-sm font-mono">{t.pricing.sub}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -383,6 +409,7 @@ function Pricing() {
 
 // ── Footer ─────────────────────────────────────────────────────
 function Footer() {
+  const { t } = useI18n();
   return (
     <footer className="border-t border-border py-10 px-6">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -390,7 +417,7 @@ function Footer() {
           Blender<span className="text-flame">MCP</span>
         </span>
         <p className="text-text-3 text-xs font-mono order-last md:order-none">
-          © 2025 BlenderMCP — Hecho para artistas e ingenieros de IA
+          {t.footer.tagline}
         </p>
         <div className="flex gap-8">
           {[

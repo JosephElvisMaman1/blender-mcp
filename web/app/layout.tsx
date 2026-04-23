@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { I18nProvider } from '@/lib/i18n/context';
 
 export const metadata: Metadata = {
-  title: 'Blender MCP — Control Blender con IA',
-  description: 'Conecta Claude, GPT y Cursor a Blender 3D. El MCP server más avanzado para artistas 3D e ingenieros de IA.',
-  keywords: ['blender', 'mcp', 'ai', 'claude', 'gpt', '3d', 'automation'],
+  title: {
+    default: 'Blender MCP — Control Blender with AI',
+    template: '%s | BlenderMCP',
+  },
+  description: 'Connect Claude, GPT and Cursor to Blender 3D. Advanced academic research in MCP automation.',
+  keywords: ['blender', 'mcp', 'ai', 'claude', 'gpt', '3d', 'automation', 'byok', 'academic'],
   openGraph: {
     title: 'Blender MCP',
-    description: 'Controla Blender con IA en tiempo real',
+    description: 'Control Blender with AI in real time',
     type: 'website',
   },
 };
@@ -24,7 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-bg text-text-1 font-sans antialiased overflow-x-hidden">
-        {children}
+        <I18nProvider>
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );
